@@ -23,7 +23,9 @@ export default function AppContainer() {
           <div class="row">
             <div id="main" class="col-lg-8 col-md-12 col-sm-12">
               <Slide />
-              <Product />
+              <Switch>
+                <Route path="/" component={Product} />
+              </Switch>
             </div>
             <Sidebar />
           </div>
