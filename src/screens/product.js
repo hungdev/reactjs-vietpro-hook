@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import Item from './components/item'
-import { getProducts } from './services/Api'
+import * as API from './services/Api'
 function Product() {
-  const [data, setData] = useState([]);
+  const [featProduct, setFeatProduct] = useState([]);
+  const [newProduct, setNewProduct] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
-      // const result = await axios('http://mobileshop.hungvu.net/get-products');
-      const result = await getProducts();
-      setData(result.data.data);
-      console.log('result', result)
+      const [featPr, newPr] = await Promise.all([
+        API.getFeatureProducts({ limit: 9 }),
+        API.getNewProducts({ limit: 6 }),
+      ])
+      setFeatProduct(featPr.data.data);
+      setNewProduct(newPr.data.data);
     }
 
     fetchData();
@@ -21,16 +23,16 @@ function Product() {
       <div class="products">
         <h3>Sản phẩm nổi bật</h3>
         <div class="product-list card-deck">
-          {data.map(e => <Item key={e._id} name={e.name} price={e.price} />)}
+          {featProduct.map(e => <Item key={e._id} detail={e} />)}
         </div>
       </div>
 
-      {/* <div class="products">
+      <div class="products">
         <h3>Sản phẩm mới</h3>
         <div class="product-list card-deck">
-          {data1.map(el => <Item name={el.name} />)}
+          {newProduct.map(e => <Item key={e._id} detail={e} />)}
         </div>
-      </div> */}
+      </div>
     </>
   );
 }
